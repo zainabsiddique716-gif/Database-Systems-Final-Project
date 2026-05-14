@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Add Citizen{% endblock %}
+{% block page_title %}Register New Citizen{% endblock %}
+{% block topbar_actions %}
+  <a href="{{ url_for('citizens') }}" class="btn btn-ghost">← Back</a>
+{% endblock %}
+{% block content %}
+<div style="max-width:720px"><div class="card">
+<form method="post">
+  <div class="form-grid">
+    <div class="form-group"><label>Full Name</label><input name="full_name" required placeholder="Ali Hassan"/></div>
+    <div class="form-group"><label>CNIC</label><input name="cnic" required placeholder="61101-1234567-8" maxlength="15"/></div>
+    <div class="form-group"><label>Father's Name</label><input name="father_name" placeholder="Mohammad Hassan"/></div>
+    <div class="form-group"><label>Date of Birth</label><input type="date" name="date_of_birth" required/></div>
+    <div class="form-group"><label>Phone</label><input name="phone" required placeholder="0301-1111111"/></div>
+    <div class="form-group"><label>License Number</label><input name="license_number" placeholder="L123456"/></div>
+    <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="ali@gmail.com"/></div>
+    <div class="form-group"><label>Address</label><input name="address" placeholder="House 1, Chiniot"/></div>
+  </div>
+  <div style="margin-top:20px;display:flex;gap:10px">
+    <button class="btn btn-primary" type="submit">👤 Register Citizen</button>
+    <a href="{{ url_for('citizens') }}" class="btn btn-ghost">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

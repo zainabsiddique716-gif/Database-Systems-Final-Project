@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Officers{% endblock %}
+{% block page_title %}Traffic Officers{% endblock %}
+{% block content %}
+<div class="card"><div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Badge</th><th>Name</th><th>Rank</th><th>Shift</th><th>Contact</th><th>Joining Date</th><th>Total Challans</th></tr>
+    </thead>
+    <tbody>
+      {% for o in officers %}
+      <tr>
+        <td style="color:var(--muted)">{{ o.officer_id }}</td>
+        <td><strong style="color:var(--accent)">{{ o.badge_number }}</strong></td>
+        <td>{{ o.full_name }}</td>
+        <td>{{ o.rank_name }}</td>
+        <td>
+          <span class="badge {% if o.shift_timing=='Morning' %}badge-active{% elif o.shift_timing=='Night' %}badge-disputed{% else %}badge-pending{% endif %}">
+            {{ o.shift_timing or '—' }}
+          </span>
+        </td>
+        <td style="color:var(--muted)">{{ o.contact_number }}</td>
+        <td style="color:var(--muted)">{{ o.joining_date }}</td>
+        <td><strong>{{ o.total_challans }}</strong></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">No officers found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endblock %}

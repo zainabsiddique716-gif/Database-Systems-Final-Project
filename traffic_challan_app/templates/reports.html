@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block page_title %}Reports & Analytics{% endblock %}
+
+{% block content %}
+
+{% if not data %}
+<!-- REPORT CARDS -->
+<div class="report-grid">
+  <a href="?report=overdue" class="report-card">
+    <div class="report-icon">⏳</div>
+    <h3>Overdue Challans</h3>
+    <p>Pending challans older than 15 days</p>
+  </a>
+  <a href="?report=officer_revenue" class="report-card">
+    <div class="report-icon">💰</div>
+    <h3>Officer Revenue</h3>
+    <p>Total fines collected per officer</p>
+  </a>
+  <a href="?report=top_officers" class="report-card">
+    <div class="report-icon">🏆</div>
+    <h3>Top Officers</h3>
+    <p>Officers with more than 10 challans</p>
+  </a>
+  <a href="?report=citizen_challans" class="report-card">
+    <div class="report-icon">👤</div>
+    <h3>Citizen Challans</h3>
+    <p>Challans linked to primary vehicle owners</p>
+  </a>
+  <a href="?report=above_avg_fines" class="report-card">
+    <div class="report-icon">📊</div>
+    <h3>Above-Average Fines</h3>
+    <p>Challans exceeding officer's average fine</p>
+  </a>
+  <a href="?report=monthly_revenue" class="report-card">
+    <div class="report-icon">📅</div>
+    <h3>Monthly Revenue</h3>
+    <p>Revenue breakdown for last 6 months</p>
+  </a>
+  <a href="?report=hotspot_locations" class="report-card">
+    <div class="report-icon">📍</div>
+    <h3>Hotspot Locations</h3>
+    <p>Roads with most traffic violations</p>
+  </a>
+  <a href="?report=full_trail" class="report-card">
+    <div class="report-icon">🔍</div>
+    <h3>Full Challan Trail</h3>
+    <p>Complete challan + payment + citizen trail</p>
+  </a>
+</div>
+{% else %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+  <h3 style="font-family:'Syne',sans-serif;font-size:18px">{{ title }}</h3>
+  <a href="{{ url_for('reports') }}" class="btn btn-ghost">← All Reports</a>
+</div>
+
+<div class="card"><div class="table-wrap">
+  <table>
+    <thead>
+      <tr>{% for c in cols %}<th>{{ c.replace('_',' ').title() }}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+      {% for row in data %}
+      <tr>
+        {% for c in cols %}
+        <td>{{ row[c] if row[c] is not none else '—' }}</td>
+        {% endfor %}
+      </tr>
+      {% else %}
+      <tr><td colspan="{{ cols|length }}" style="text-align:center;color:var(--muted);padding:32px">No data.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endif %}
+
+{% endblock %}

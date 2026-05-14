@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Register Vehicle{% endblock %}
+{% block page_title %}Register New Vehicle{% endblock %}
+{% block topbar_actions %}<a href="{{ url_for('vehicles') }}" class="btn btn-ghost">← Back</a>{% endblock %}
+{% block content %}
+<div style="max-width:720px"><div class="card">
+<form method="post">
+  <div class="form-grid">
+    <div class="form-group"><label>Plate Number</label><input name="plate_number" required placeholder="LEB-1234"/></div>
+    <div class="form-group"><label>Vehicle Type</label>
+      <select name="vehicle_type" required>
+        {% for t in ['Car','Motorcycle','Truck','Van','Auto Rickshaw','Bus'] %}
+        <option>{{ t }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="form-group"><label>Model Year</label><input type="number" name="model_year" required min="1970" max="2026" placeholder="2022"/></div>
+    <div class="form-group"><label>Engine Number</label><input name="engine_number" placeholder="ENG001"/></div>
+    <div class="form-group"><label>Registration Date</label><input type="date" name="registration_date" required/></div>
+    <div class="form-group"><label>Registration Expiry</label><input type="date" name="registration_expiry" required/></div>
+    <div class="form-group"><label>Color</label><input name="color" placeholder="White"/></div>
+    <div class="form-group"><label>Status</label>
+      <select name="status"><option value="ACTIVE">ACTIVE</option><option value="EXPIRED">EXPIRED</option><option value="SUSPENDED">SUSPENDED</option></select>
+    </div>
+  </div>
+  <div style="margin-top:20px;display:flex;gap:10px">
+    <button class="btn btn-primary" type="submit">🚗 Register Vehicle</button>
+    <a href="{{ url_for('vehicles') }}" class="btn btn-ghost">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

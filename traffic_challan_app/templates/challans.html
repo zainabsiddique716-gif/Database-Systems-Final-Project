@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Challans{% endblock %}
+{% block page_title %}Challans{% endblock %}
+{% block topbar_actions %}
+  <a href="{{ url_for('new_challan') }}" class="btn btn-primary">+ Issue Challan</a>
+{% endblock %}
+
+{% block content %}
+<!-- FILTER TABS -->
+<div class="filter-tabs">
+  {% for s in ['ALL','PENDING','PAID','DISPUTED','CANCELLED'] %}
+  <a href="?status={{ s }}&search={{ search }}"
+     class="filter-tab {% if status_filter==s %}active{% endif %}">{{ s }}</a>
+  {% endfor %}
+</div>
+
+<!-- SEARCH -->
+<form class="search-bar" method="get">
+  <input type="hidden" name="status" value="{{ status_filter }}"/>
+  <input name="search" value="{{ search }}" placeholder="Search plate number or citizen name…"/>
+  <button class="btn btn-ghost" type="submit">🔍 Search</button>
+  {% if search %}<a href="?status={{ status_filter }}" class="btn btn-ghost">✕ Clear</a>{% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Challan ID</th><th>Plate</th><th>Citizen</th><th>Violation</th>
+          <th>Fine (PKR)</th><th>Officer</th><th>Issue Date</th><th>Due Date</th>
+          <th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in challans %}
+        <tr>
+          <td style="color:var(--muted)">#{{ c.challan_id }}</td>
+          <td><strong>{{ c.plate_number }}</strong></td>
+          <td>{{ c.citizen_name or '—' }}</td>
+          <td>{{ c.violation_name }}</td>
+          <td><strong>{{ '{:,.0f}'.format(c.fine_amount) }}</strong></td>
+          <td style="color:var(--muted)">{{ c.officer_name }}</td>
+          <td style="color:var(--muted)">{{ c.issue_date }}</td>
+          <td style="color:var(--muted)">{{ c.due_date }}</td>
+          <td><span class="badge badge-{{ c.status|lower }}">{{ c.status }}</span></td>
+          <td>
+            <form method="post" action="{{ url_for('update_challan_status', cid=c.challan_id) }}" style="display:inline-flex;gap:4px">
+              <select name="status" style="padding:4px 8px;font-size:12px;border-radius:6px">
+                {% for s in ['PENDING','PAID','DISPUTED','CANCELLED'] %}
+                <option {% if c.status==s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+              </select>
+              <button class="btn btn-ghost btn-sm" type="submit">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="10" style="text-align:center;color:var(--muted);padding:32px">No challans found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

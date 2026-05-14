@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Citizens{% endblock %}
+{% block page_title %}Citizens{% endblock %}
+{% block topbar_actions %}
+  <a href="{{ url_for('new_citizen') }}" class="btn btn-primary">+ Add Citizen</a>
+{% endblock %}
+
+{% block content %}
+<form class="search-bar" method="get">
+  <input name="search" value="{{ search }}" placeholder="Search by name or CNIC…"/>
+  <button class="btn btn-ghost" type="submit">🔍 Search</button>
+  {% if search %}<a href="{{ url_for('citizens') }}" class="btn btn-ghost">✕ Clear</a>{% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Full Name</th><th>CNIC</th><th>Phone</th><th>License No.</th><th>Vehicles</th><th>Challans</th><th>Email</th></tr>
+      </thead>
+      <tbody>
+        {% for c in citizens %}
+        <tr>
+          <td style="color:var(--muted)">{{ c.citizen_id }}</td>
+          <td><strong>{{ c.full_name }}</strong></td>
+          <td style="font-family:monospace;font-size:12px">{{ c.cnic }}</td>
+          <td>{{ c.phone }}</td>
+          <td style="color:var(--muted)">{{ c.license_number or '—' }}</td>
+          <td><span class="badge badge-active">{{ c.vehicle_count }}</span></td>
+          <td>
+            {% if c.challan_count > 0 %}
+            <span class="badge badge-pending">{{ c.challan_count }}</span>
+            {% else %}
+            <span style="color:var(--muted)">0</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--muted);font-size:12px">{{ c.email or '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">No citizens found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

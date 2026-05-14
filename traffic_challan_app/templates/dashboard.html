@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Traffic Challan System{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+{% if stats.get('error') %}
+  <div class="alert alert-error">❌ Database connection failed: {{ stats.error }}<br>
+  <small>Check DB_USER, DB_PASSWORD, DB_DSN in app.py</small></div>
+{% else %}
+
+<!-- STAT CARDS -->
+<div class="stats-grid">
+  <div class="stat-card" style="--accent-color:#f5a623">
+    <div class="stat-label">Total Challans</div>
+    <div class="stat-value">{{ stats.total_challans }}</div>
+    <div class="stat-icon">📋</div>
+  </div>
+  <div class="stat-card" style="--accent-color:#e8473f">
+    <div class="stat-label">Pending</div>
+    <div class="stat-value">{{ stats.pending_challans }}</div>
+    <div class="stat-icon">⏳</div>
+  </div>
+  <div class="stat-card" style="--accent-color:#2ecc71">
+    <div class="stat-label">Paid</div>
+    <div class="stat-value">{{ stats.paid_challans }}</div>
+    <div class="stat-icon">✅</div>
+  </div>
+  <div class="stat-card" style="--accent-color:#3b82f6">
+    <div class="stat-label">Revenue (PKR)</div>
+    <div class="stat-value" style="font-size:20px">{{ '{:,.0f}'.format(stats.total_revenue) }}</div>
+    <div class="stat-icon">💰</div>
+  </div>
+  <div class="stat-card" style="--accent-color:#a855f7">
+    <div class="stat-label">Citizens</div>
+    <div class="stat-value">{{ stats.total_citizens }}</div>
+    <div class="stat-icon">👤</div>
+  </div>
+  <div class="stat-card" style="--accent-color:#06b6d4">
+    <div class="stat-label">Vehicles</div>
+    <div class="stat-value">{{ stats.total_vehicles }}</div>
+    <div class="stat-icon">🚗</div>
+  </div>
+  <div class="stat-card" style="--accent-color:#f59e0b">
+    <div class="stat-label">Officers</div>
+    <div class="stat-value">{{ stats.total_officers }}</div>
+    <div class="stat-icon">👮</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 340px;gap:20px">
+
+  <!-- RECENT CHALLANS -->
+  <div class="card">
+    <div class="card-title">Recent Challans</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Plate</th><th>Violation</th>
+            <th>Fine (PKR)</th><th>Date</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in stats.recent_challans %}
+          <tr>
+            <td style="color:var(--muted)">#{{ r.challan_id }}</td>
+            <td><strong>{{ r.plate_number }}</strong></td>
+            <td>{{ r.violation_name }}</td>
+            <td>{{ '{:,.0f}'.format(r.fine_amount) }}</td>
+            <td style="color:var(--muted)">{{ r.issue_date }}</td>
+            <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VIOLATION BREAKDOWN -->
+  <div class="card">
+    <div class="card-title">Top Violations</div>
+    {% for v in stats.violation_breakdown %}
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+        <span>{{ v.violation_name }}</span>
+        <span style="font-weight:400;color:var(--accent)">{{ v.cnt }}</span>
+      </div>
+      <div style="background:var(--surface2);border-radius:99px;height:6px;overflow:hidden">
+        <div style="background:var(--accent);height:100%;width:{{ [v.cnt * 10, 100]|min }}%;border-radius:99px;transition:width 0.5s"></div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top:24px">
+      <div class="card-title">Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="{{ url_for('new_challan') }}"   class="btn btn-primary" style="justify-content:center">+ Issue Challan</a>
+        <a href="{{ url_for('new_payment') }}"   class="btn btn-ghost"   style="justify-content:center">💳 Record Payment</a>
+        <a href="{{ url_for('new_citizen') }}"   class="btn btn-ghost"   style="justify-content:center">+ Add Citizen</a>
+        <a href="{{ url_for('new_vehicle') }}"   class="btn btn-ghost"   style="justify-content:center">+ Register Vehicle</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endif %}
+{% endblock %}

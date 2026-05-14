@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ view_name }}{% endblock %}
+{% block page_title %}{{ view_name }}{% endblock %}
+{% block topbar_actions %}<a href="{{ url_for('dashboard') }}" class="btn btn-ghost">← Dashboard</a>{% endblock %}
+{% block content %}
+<div class="card"><div class="table-wrap">
+  <table>
+    <thead>
+      <tr>{% for c in cols %}<th>{{ c.replace('_',' ').title() }}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>{% for c in cols %}<td>{{ row[c] if row[c] is not none else '—' }}</td>{% endfor %}</tr>
+      {% else %}
+      <tr><td colspan="{{ cols|length }}" style="text-align:center;color:var(--muted);padding:32px">No data.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endblock %}

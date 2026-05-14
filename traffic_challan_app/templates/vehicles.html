@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Vehicles{% endblock %}
+{% block page_title %}Vehicles{% endblock %}
+{% block topbar_actions %}
+  <a href="{{ url_for('new_vehicle') }}" class="btn btn-primary">+ Register Vehicle</a>
+{% endblock %}
+{% block content %}
+<form class="search-bar" method="get">
+  <input name="search" value="{{ search }}" placeholder="Search by plate number or owner…"/>
+  <button class="btn btn-ghost" type="submit">🔍 Search</button>
+  {% if search %}<a href="{{ url_for('vehicles') }}" class="btn btn-ghost">✕ Clear</a>{% endif %}
+</form>
+<div class="card"><div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Plate</th><th>Type</th><th>Year</th><th>Color</th><th>Owner</th><th>Reg. Expiry</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for v in vehicles %}
+      <tr>
+        <td style="color:var(--muted)">{{ v.vehicle_id }}</td>
+        <td><strong>{{ v.plate_number }}</strong></td>
+        <td>{{ v.vehicle_type }}</td>
+        <td>{{ v.model_year }}</td>
+        <td>{{ v.color or '—' }}</td>
+        <td>{{ v.owner_name or '—' }}</td>
+        <td style="color:var(--muted)">{{ v.reg_expiry }}</td>
+        <td><span class="badge badge-{{ v.status|lower }}">{{ v.status }}</span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">No vehicles found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div></div>
+{% endblock %}

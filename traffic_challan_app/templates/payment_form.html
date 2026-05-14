@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Record Payment{% endblock %}
+{% block page_title %}Record Payment{% endblock %}
+{% block topbar_actions %}<a href="{{ url_for('payments') }}" class="btn btn-ghost">← Back</a>{% endblock %}
+{% block content %}
+<div style="max-width:600px"><div class="card">
+<form method="post">
+  <div class="form-grid">
+    <div class="form-group full">
+      <label>Pending Challan</label>
+      <select name="challan_id" required>
+        <option value="">— Select Challan —</option>
+        {% for c in pending_challans %}
+        <option value="{{ c.challan_id }}">
+          #{{ c.challan_id }} — {{ c.plate_number }} — PKR {{ '{:,.0f}'.format(c.total_amount) }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group"><label>Amount Paid (PKR)</label><input type="number" name="amount_paid" step="0.01" required placeholder="1500"/></div>
+    <div class="form-group"><label>Payment Method</label>
+      <select name="payment_method" required>
+        {% for m in ['CASH','CARD','BANK_TRANSFER','JAZZCASH','EASYPEASA'] %}
+        <option>{{ m }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="form-group"><label>Transaction ID</label><input name="transaction_id" placeholder="TXN001"/></div>
+    <div class="form-group"><label>Receipt Number</label><input name="receipt_number" placeholder="RCP001"/></div>
+  </div>
+  <div style="margin-top:20px;display:flex;gap:10px">
+    <button class="btn btn-primary" type="submit">💳 Record Payment</button>
+    <a href="{{ url_for('payments') }}" class="btn btn-ghost">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}
